@@ -1,0 +1,3 @@
+[submodule "hosts/cdnjs.cloudflare.com"]
+	path = hosts/cdnjs.cloudflare.com
+	url = git://github.com/cdnjs/cdnjs.git
