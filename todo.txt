@@ -1,0 +1,3 @@
+We need to modify the host file in a (somewhat) extensible way
+We need to have an interface to this
+Let's start with a cli and then we'll see about a web interface
