@@ -4,4 +4,5 @@
 	"dependencies": {
 		"express": ">=2.4.6"
 	}
+	"bin" : "./rorrim"
 }
