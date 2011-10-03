@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+var fs = require('fs'),
+	 server = require('./server').app,
+	 r = require('./lib');
+
+process.title = "rorrim";
+r.checkInit();
+r.backupHostFile();
+if(process.argv[2] == "test"){ //Begin hoopty testing
+	console.log("Testing empty array handling of writeHostFile");
+	r.writeHostFile([]);
+	r.revertHostFile();
+	console.log("  done with 'empty array test'\n");
+
+	console.log("r.walkRorrimFolder():");
+	console.log(r.walkRorrimFolder());
+	r.writeHostFile(r.walkRorrimFolder());
+	console.log("Result after walkRorrimFolder:\n" + fs.readFileSync(r.hostfile, 'utf8'));
+	r.revertHostFile();
+
+	r.writeHostFile('cdnjs.cloudflare.com');
+	console.log("Result after call with 'cdnjs.cloudflare.com':\n" + fs.readFileSync(r.hostfile, 'utf8'));
+	r.revertHostFile();
+	//console.log(fs.readFileSync(r.hostfile, 'utf8'));
+}
+
+try {
+	server.listen('80');
+} catch(e) {
+	if(e.code == 'EACCES'){
+		console.log("It looks like you need root privileges to start a server on port 80.\n" +
+						 "Try again with `sudo rorrim`");
+		r.revertHostFile();
+		process.exit(13);
+	} else {
+		r.revertHostFile();
+		throw e;
+	}
+}
+
+process.on('SIGINT', function(){
+	//If we get SIGINT, clean up after ourselves
+	console.log("Caught SIGINT");
+	r.revertHostFile();
+	server.close();
+	process.exit();
+});
+
+process.on('uncaughtException', function(err){
+	try{
+		console.warn("Uh Oh! uncaughtExeption! Lemme try to revert your hostfile");
+		r.revertHostFile();
+	} catch(e){
+		console.warn("Looks like something really bad happened!\nHere's your original hostfile:\n" + r.origHostString);
+	}
+	throw err;
+});
+// vim: filetype=javascript
