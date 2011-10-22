@@ -15,7 +15,8 @@ var fs = require('fs'),
 				.describe('l', 'List installed files')
 				.boolean('h')
 				.alias('h', 'help')
-				.alias('h', '?'),
+				.alias('h', '?')
+				.describe('h', 'Show this usage info'),
 	argv = optimist.argv;
 
 if(argv.help){
