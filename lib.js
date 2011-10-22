@@ -63,6 +63,15 @@ Rorrim.walkRorrimFolder = function(folderPath){
 	var folderPath = folderPath || this.hostsFolder;
 	return fs.readdirSync(folderPath).filter(function(file){return fs.statSync(path.join(folderPath, file)).isDirectory();}); //funny synchronous oneliner
 }
+Rorrim.install = function(input){
+	this.installFolder(input);
+}
+Rorrim.installFolder = function(path){
+	console.log("Not implemented yet");
+}
+Rorrim.getFiles = function(url){
+	console.log("Sorry not implemented either");
+}
 Rorrim.checkInit = function(){
 	try {
 		fs.readdirSync(this.rorrimFolder);
