@@ -8,7 +8,7 @@ var fs = require('fs'),
 				.alias('t', 'test')
 				.describe('t', 'Run the hoopty tests')
 				.alias('i', 'install')
-				.describe('i', 'Install new file into rorrim folder')
+				.describe('i', 'Install new file into rorrim folder -- Not implemented yet')
 				.boolean('l')
 				.alias('l', 'ls')
 			  	.alias('l', 'list')
