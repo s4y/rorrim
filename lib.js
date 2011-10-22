@@ -49,12 +49,9 @@ Rorrim.writeHostFile = function(hosts){
 }
 Rorrim.cleanupHostFile = function(){
 	var hostfile = fs.readFileSync(this.hostfile, 'utf8');
-	console.log(this.rorrimHostsRE);
-	console.log(hostfile);
 	if(hostfile.match(this.COMMENT) !== null){
+		console.log("Cleaning Up Hostfile");
 		hostfile = hostfile.replace(this.rorrimHostsRE, "");
-		console.log(hostfile);
-		console.log(this.hostfile);
 		this.origHostString = hostfile;
 		fs.writeFileSync(this.hostfile, hostfile, 'utf8');
 	}
