@@ -6,22 +6,34 @@ var fs = require('fs'),
 process.title = "rorrim";
 r.checkInit();
 r.backupHostFile();
-if(process.argv[2] == "test"){ //Begin hoopty testing
-	console.log("Testing empty array handling of writeHostFile");
-	r.writeHostFile([]);
-	r.revertHostFile();
-	console.log("  done with 'empty array test'\n");
+switch(process.argv[2]){
+	case("test"){  //Begin hoopty testing
+		console.log("Testing empty array handling of writeHostFile");
+		r.writeHostFile([]);
+		r.revertHostFile();
+		console.log("  done with 'empty array test'\n");
 
-	console.log("r.walkRorrimFolder():");
-	console.log(r.walkRorrimFolder());
-	r.writeHostFile(r.walkRorrimFolder());
-	console.log("Result after walkRorrimFolder:\n" + fs.readFileSync(r.hostfile, 'utf8'));
-	r.revertHostFile();
+		console.log("r.walkRorrimFolder():");
+		console.log(r.walkRorrimFolder());
+		r.writeHostFile(r.walkRorrimFolder());
+		console.log("Result after walkRorrimFolder:\n" + fs.readFileSync(r.hostfile, 'utf8'));
+		r.revertHostFile();
 
-	r.writeHostFile('cdnjs.cloudflare.com');
-	console.log("Result after call with 'cdnjs.cloudflare.com':\n" + fs.readFileSync(r.hostfile, 'utf8'));
-	r.revertHostFile();
-	//console.log(fs.readFileSync(r.hostfile, 'utf8'));
+		r.writeHostFile('cdnjs.cloudflare.com');
+		console.log("Result after call with 'cdnjs.cloudflare.com':\n" + fs.readFileSync(r.hostfile, 'utf8'));
+		r.revertHostFile();
+		//console.log(fs.readFileSync(r.hostfile, 'utf8'));
+		break;
+	}
+	case("help"){
+		console.log("Here's where the help goes");
+		process.exit(0);
+		break;
+	}
+	default {
+		console.log("Here's where the usage goes");
+		process.exit(1);
+	}
 }
 
 try {
