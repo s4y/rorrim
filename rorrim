@@ -7,7 +7,7 @@ process.title = "rorrim";
 r.checkInit();
 r.backupHostFile();
 switch(process.argv[2]){
-	case("test"){  //Begin hoopty testing
+	case("test"):  //Begin hoopty testing
 		console.log("Testing empty array handling of writeHostFile");
 		r.writeHostFile([]);
 		r.revertHostFile();
@@ -24,16 +24,20 @@ switch(process.argv[2]){
 		r.revertHostFile();
 		//console.log(fs.readFileSync(r.hostfile, 'utf8'));
 		break;
-	}
-	case("help"){
+	case("install"):
+		if(argv[3] !== undefined){
+			console.log("Installing "+argv[3]);
+		} else {
+			console.log("install takes an argument");
+		}
+		break;
+	case("help"):
 		console.log("Here's where the help goes");
 		process.exit(0);
 		break;
-	}
-	default {
+	default:
 		console.log("Here's where the usage goes");
 		process.exit(1);
-	}
 }
 
 try {
