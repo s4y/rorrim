@@ -5,11 +5,12 @@ var Rorrim = {},
 Rorrim.hostfile = '/etc/hosts',
 Rorrim.origHostString = fs.readFileSync(Rorrim.hostfile, 'utf8'),
 Rorrim.host = 'cdnjs.cloudflare.com',
-Rorrim.comment = "\n# Rorrim Host Entries Below\n" + "###########################\n";
-Rorrim.endComment = "\n# End Rorrim Entries #",
+Rorrim.COMMENT = "\n# Rorrim Host Entries Below\n" + "###########################\n" + "# Don't Modify Below Here #\n";
+Rorrim.END_COMMENT = "\n# End Rorrim Entries #\n",
 Rorrim.rorrimFolder = path.join(process.env.HOME, '.rorrim/'),
 Rorrim.hostsFolder = path.join(this.rorrimFolder, 'hosts'),
-Rorrim.backupPath = path.join(this.rorrimFolder, 'hostfile.bak');
+Rorrim.backupPath = path.join(this.rorrimFolder, 'hostfile.bak'),
+Rorrim.rorrimHostsRE = RegExp(Rorrim.COMMENT + "[\\s\\S]*" + Rorrim.END_COMMENT);
 //Rorrim.pathWithArgs = process.argv.join(' ');
 
 Rorrim.createBackupHostFile = function(backupPath){ //Maybe change to ensureBackupExists
@@ -43,8 +44,20 @@ Rorrim.writeHostFile = function(hosts){
 	} else {
 		throw new Error("Bad Argument to writeHostFile");
 	}
-	newHostString = this.origHostString + this.comment + newHostString + this.endComment;
+	newHostString = this.origHostString + this.COMMENT + newHostString + this.END_COMMENT;
 	fs.writeFileSync(this.hostfile, newHostString, 'utf8');
+}
+Rorrim.cleanupHostFile = function(){
+	var hostfile = fs.readFileSync(this.hostfile, 'utf8');
+	console.log(this.rorrimHostsRE);
+	console.log(hostfile);
+	if(hostfile.match(this.COMMENT) !== null){
+		hostfile = hostfile.replace(this.rorrimHostsRE, "");
+		console.log(hostfile);
+		console.log(this.hostfile);
+		this.origHostString = hostfile;
+		fs.writeFileSync(this.hostfile, hostfile, 'utf8');
+	}
 }
 Rorrim.walkRorrimFolder = function(folderPath){
 	var folderPath = folderPath || this.hostsFolder;
@@ -64,6 +77,7 @@ Rorrim.checkInit = function(){
 		this.createBackupHostFile();
 		console.log(this.backupPath);
 	}
+	this.cleanupHostFile();
 }
 
 module.exports = Rorrim;
