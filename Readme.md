@@ -7,9 +7,15 @@ dependencies on CDN's
 Simply install with `npm install -g rorrim`
 
 Then run `rorrim`
-Eventually it will be easier to add stuff to the hosts directory,
-but for now you'll need to copy files into a directory
-under `~/.rorrim/hosts` named the same as the hostname
-for example `~/.rorrim/hosts/cdnjs.cloudflare.com`
+
+Currently there are two ways to add files to rorrim's cache:
+ * the (potentially buggy) command line flag
+	`rorrim -i "http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"`
+ * and by manually copying files into a directory under
+   `~/.rorrim/hosts` named the same as the hostname for example
+	`~/.rorrim/hosts/cdnjs.cloudflare.com`
+
+Eventually it will be easier to interact with rorrim, but this is just
+an "MVP".
 
 Running `rorrim --help` will show you some basic usage

@@ -1,6 +1,8 @@
 var Rorrim = {},
 	 fs = require('fs'),
-	 path = require('path');
+	 path = require('path'),
+	 childProcess = require('child_process'),
+	 url = require('url');
 
 Rorrim.hostfile = '/etc/hosts',
 Rorrim.origHostString = fs.readFileSync(Rorrim.hostfile, 'utf8'),
@@ -8,8 +10,8 @@ Rorrim.host = 'cdnjs.cloudflare.com',
 Rorrim.COMMENT = "\n# Rorrim Host Entries Below\n" + "###########################\n" + "# Don't Modify Below Here #\n";
 Rorrim.END_COMMENT = "\n# End Rorrim Entries #\n",
 Rorrim.rorrimFolder = path.join(process.env.HOME, '.rorrim/'),
-Rorrim.hostsFolder = path.join(this.rorrimFolder, 'hosts'),
-Rorrim.backupPath = path.join(this.rorrimFolder, 'hostfile.bak'),
+Rorrim.hostsFolder = path.join(Rorrim.rorrimFolder, 'hosts'),
+Rorrim.backupPath = path.join(Rorrim.rorrimFolder, 'hostfile.bak'),
 Rorrim.rorrimHostsRE = RegExp(Rorrim.COMMENT + "[\\s\\S]*" + Rorrim.END_COMMENT);
 //Rorrim.pathWithArgs = process.argv.join(' ');
 
@@ -51,8 +53,7 @@ Rorrim.cleanupHostFile = function(){
 	var hostfile = fs.readFileSync(this.hostfile, 'utf8');
 	if(hostfile.match(this.COMMENT) !== null){
 		console.log("Cleaning Up Hostfile");
-		hostfile = hostfile.replace(this.rorrimHostsRE, "");
-		this.origHostString = hostfile;
+		hostfile = hostfile.replace(this.rorrimHostsRE, ""); this.origHostString = hostfile;
 		fs.writeFileSync(this.hostfile, hostfile, 'utf8');
 	}
 }
@@ -60,10 +61,45 @@ Rorrim.walkRorrimFolder = function(folderPath){
 	var folderPath = folderPath || this.hostsFolder;
 	return fs.readdirSync(folderPath).filter(function(file){return fs.statSync(path.join(folderPath, file)).isDirectory();}); //funny synchronous oneliner
 }
+Rorrim.self = function() { return this; };
 Rorrim.install = function(input){
-	this.installFolder(input);
+	var parsedUrl = url.parse(input),
+		 urlObject = {host: parsedUrl.host, port: parsedUrl.port, path:parsedUrl.pathname},
+		 hostname = parsedUrl.hostname,
+		 filename = path.join(Rorrim.hostsFolder, hostname, parsedUrl.pathname);
+	childProcess.exec('mkdir -p ' + path.dirname(filename), function(err){
+		if(err){
+			throw err;
+		} else {
+			var fileStream = fs.createWriteStream(filename);
+				 console.log(filename);
+				 console.log(fileStream);
+			console.log(parsedUrl);
+
+			if(parsedUrl.protocol !== undefined){
+				switch(parsedUrl.protocol){
+				  case "http:":
+					  require('http').get(urlObject, function(res){
+							res.on('data', function(chunk){
+								//console.log(chunk);
+								fileStream.write(chunk);
+							});
+					  });
+					  console.log("HTTP");
+					  break;
+				  case "https:":
+					  console.log("HTTPS");
+					  break;
+				  default:
+					  console.warn("That's not a fully qualified domain");
+					  process.exit(11);
+				}
+			}
+			//Rorrim.installFiles(input);
+		}
+	});
 }
-Rorrim.installFolder = function(path){
+Rorrim.installFiles = function(path){
 	console.log("Not implemented yet");
 }
 Rorrim.getFiles = function(url){
