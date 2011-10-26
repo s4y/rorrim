@@ -1,9 +1,26 @@
 {
 	"name": "rorrim",
-	"version": "0.0.1",
+	"contributors": [
+		"Sam Epstein <rorrim@samepstein.com>",
+		"Sidney San Martín <rorrim@sidneysm.com>"
+	],
+  	"description": "A tiny server for serving of files normally stored on other hosts",
+	"homepage": "http://omni5cience.github.com/rorrim",
+	"bugs": "http://github.com/omni5cience/rorrim/issues",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/omni5cience/rorrim.git"
+	},
+	"version": "0.1.1",
 	"dependencies": {
 		"express": ">=2.4.6",
 		"optimist": ">=0.2.8"
 	},
-	"bin" : "./rorrim"
+	"keywords": [
+		"mirror",
+		"cdn"
+	],
+	"bin" : "./rorrim",
+	"preferGlobal": true,
+	"engines": { "node": "*" }
 }
