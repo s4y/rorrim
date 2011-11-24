@@ -57,9 +57,7 @@ if(argv.list){
 	process.exit(0);
 }
 
-try {
-	server.listen('80');
-} catch(e) {
+server.on('error', function(e){
 	if(e.code == 'EACCES'){
 		console.log("It looks like you need root privileges to start a server on port 80.\n" +
 						 "Try again with `sudo rorrim`");
@@ -69,7 +67,9 @@ try {
 		r.revertHostFile();
 		throw e;
 	}
-}
+});
+
+server.listen('80');
 
 process.on('SIGINT', function(){
 	//If we get SIGINT, clean up after ourselves
